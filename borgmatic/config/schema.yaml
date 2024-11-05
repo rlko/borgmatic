@@ -1922,6 +1922,20 @@ properties:
                     - start
                     - finish
                     - fail
+            client_cert_path:
+                type: string
+                description: |
+                    Path to the client certificate file for authenticating the
+                    connection to Uptime Kuma. Required if client authentication
+                    is enabled.
+                example: /path/to/cert.pem
+            client_key_path:
+                type: string
+                description: |
+                    Path to the client key file for authenticating the
+                    connection to Uptime Kuma. Required if client authentication
+                    is enabled.
+                example: /path/to/key.pem
         description: |
             Configuration for a monitoring integration with Uptime Kuma using
             the Push monitor type.
