@@ -27,6 +27,10 @@ def ping_monitor(hook_config, config, config_filename, state, monitoring_log_lev
     dry_run_label = ' (dry run; not actually pushing)' if dry_run else ''
     status = 'down' if state.name.lower() == 'fail' else 'up'
     push_url = hook_config.get('push_url', 'https://example.uptime.kuma/api/push/abcd1234')
+    client_cert_path = hook_config.get('client_cert_path')
+    client_key_path = hook_config.get('client_key_path')
+    cert = (client_cert_path, client_key_path) if client_cert_path and client_key_path else None
+
     query = f'status={status}&msg={state.name.lower()}'
     logger.info(
         f'{config_filename}: Pushing Uptime Kuma push_url {push_url}?{query} {dry_run_label}'
@@ -39,7 +43,7 @@ def ping_monitor(hook_config, config, config_filename, state, monitoring_log_lev
     logging.getLogger('urllib3').setLevel(logging.ERROR)
 
     try:
-        response = requests.get(f'{push_url}?{query}')
+        response = requests.get(f'{push_url}?{query}', cert=cert)
         if not response.ok:
             response.raise_for_status()
     except requests.exceptions.RequestException as error:
